@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <form class="mx-auto w-100 text-primary" style="margin-top: 7%; max-width: 500px;" action="" method="post"
+        enctype="multipart/form-data">
+        <h4 class="text-center text-primary">Edit Post</h4>
+        {% csrf_token %}
+        {{form}}
+        <button class="btn btn-primary my-3 w-100" type="submit">Save Post</button>
+    </form>
+</div>
+
+{% endblock %}
