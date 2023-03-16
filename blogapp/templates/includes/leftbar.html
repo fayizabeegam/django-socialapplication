@@ -1,0 +1,65 @@
+{% load static %}
+<div class="d-none d-lg-block h-100 scrollbar " style="position: fixed; top: 0; width: 15%;">
+
+
+
+    <ul class="navbar-nav mt-5 ms-3 d-flex flex-column  mb-5 "></ul>
+    <!-- top -->
+
+    <!-- avatar -->
+    <li class="dropdown-item p-1 rounded">
+        <a href="{% url 'my-profile' %}" class="d-flex align-items-center text-decoration-none text-dark">
+            <div class="p-3 ms-5">
+                <img src="{{request.user.profile_pic.url}}" alt="avatar" class="rounded-circle me-2 border shadow"
+                    style="width: 38px; height: 38px; object-fit: cover" />
+            </div>
+            <div>
+                <p class="m-0"></p>
+            </div>
+        </a>
+    </li>
+    <!-- home-->
+    <li class="dropdown-item p-1 rounded">
+        <a href="{% url 'home'  %}" class="d-flex align-items-center text-decoration-none text-dark">
+            <div class="p-3 ms-5 " >
+               <img class="me-2 h-20px fa-fw rounded-circle border shadow" src="{% static 'assets/home.svg' %} " alt=""
+                     style="width: 38px; height: 38px; object-fit: cover" />
+
+            </div>
+            <div>
+                <p class="m-0"></p>
+            </div>
+        </a>
+    </li>
+    </li>
+    <!-- connections-->
+    <li class="dropdown-item p-1 rounded">
+        <a href="{% url 'connections' %}" class="d-flex align-items-center text-decoration-none text-dark " >
+            <div class="p-3 ms-5" >
+                <img class="me-2 h-20px fa-fw rounded-circle  border shadow" src="{% static 'assets/person.svg' %} " alt=""
+                     style="width: 38px; height: 38px; object-fit: cover" />
+            </div>
+            <div>
+                <p class="m-0"></p>
+            </div>
+        </a>
+    </li>
+
+<!-- power-->
+    <li class="dropdown-item p-1 rounded">
+        <a href="{% url 'signout'%}" class="d-flex align-items-center text-decoration-none text-dark">
+            <div class="p-3 ms-5">
+                 <img class="me-2 h-20px fa-fw rounded-circle  border shadow" src="{% static 'assets/power-svgrepo-com.svg' %}" alt=""
+                     style="width: 38px; height: 38px; object-fit: cover" />
+            </div>
+            <div>
+                <p class="m-0"></p>
+            </div>
+        </a>
+    </li>
+
+
+
+
+    </ul>
+</div>

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static%}
+{% block content %}
+<div class="container-fluid">
+
+    <div class="row d-flex justify-content-center   ">
+
+        <div class="col-12 col-lg-6 p-0 pb-5 pe-lg-5" style="z-index: 10;">
+            <div class="d-flex flex-column justify-content-center w-100 mx-auto " style="padding-top: 56px;">
+                <div class="p-3 mt-5 border shadow  bg-white">
+                    <!-- suggestions -->
+                    <h5 class="text-primary mx-5">Peoples You May Know</h5><hr>
+                    {% if request.user.user_profile %}
+                    {% if request.user.user_profile.get_suggestions %}
+                    {% for user in request.user.user_profile.get_suggestions %}
+                    <!-- s 1 -->
+                    <li class="dropdown-item my-3 mx-5 d-flex justify-content-between ">
+                        <!-- img -->
+                        <a href="{% url 'other-profile' user.id %}"
+                            class="d-flex align-items-center text-decoration-none link-dark">
+                            <img src="{{user.profile_pic.url}}" alt="ads" style="width: 100px; height: 100px; object-fit: cover"
+                                class="rounded-circle me-3" />
+                            <div class="follow_container ms-3">
+                                <p class="mb-3">{{user}}</p>
+                                {% csrf_token %}
+                                <input class="follow_user_id" type="hidden" name="" value="{{user.id}}">
+                                <button class="btn btn-primary follow_btn followed{{user.id}}">Follow</button>
+                            </div>
+                        </a>
+                    </li>
+                    {% endfor %}
+                    {% else %}
+                    <p class="text-muted">No Suggestions</p>
+                    {% endif %}
+                    {% else %}
+                    <p class="">Add <span><a href="{% url 'profile-add' %}" class="text-primary">profile</a></span> to
+                        get User Suggestions</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,356 @@
+{% extends 'base.html' %}
+{% load static%}
+{% block content %}
+
+<!-- ================= Home ================= -->
+<div class="container-fluid">
+    <div class="row d-flex">
+        <!-- ================= Left bar ================= -->
+        <div class="col-lg-3">
+            {% include 'includes/leftbar.html' %}
+        </div>
+
+
+        <!-- ================= Feeds ================= -->
+        <div class="col-12 col-lg-6 p-0 pb-5 pe-lg-5" style="z-index: 10;">
+            <div class="d-flex flex-column justify-content-center w-100 mx-auto" style="padding-top: 56px;">
+                {% if not no_blog_post %}
+                <!--===== add post =======-->
+                <div class="bg-white p-3 mt-4 rounded border shadow">
+                    <!-- avatar -->
+                    <div class="d-flex" type="button">
+                        <div class="p-1">
+                            <img src="{{request.user.profile_pic.url}}" alt="avatar" class="rounded-circle me-2"
+                                style="width: 38px; height: 38px; object-fit: cover" />
+                        </div>
+                        <input type="text" class="form-control rounded-pill border-0 bg-light pointer" disabled
+                            placeholder="Share your thoughts {{request.user}}...." data-bs-toggle="modal"
+                            data-bs-target="#addModal" />
+                    </div>
+                    <!-- add modal -->
+                    <div class="modal fade mt-5" id="addModal" tabindex="-1" aria-labelledby="addModalLabel"
+                        aria-hidden="true" data-bs-backdrop="false">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content mb-5">
+                                <!-- head -->
+                                <div class="modal-header align-items-center">
+                                    <h5 class="text-dark text-center w-100 m-0" id="exampleModalLabel">
+                                        Add Your Post Here..
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <!-- body -->
+                                <div class="modal-body">
+                                    <div class="my-1 p-1">
+                                        <div class="d-flex flex-column">
+                                            <!-- user -->
+                                            <div class="d-flex align-items-center">
+                                                <div class="p-2">
+                                                    <img src="{{request.user.profile_pic.url}}" alt="from fb"
+                                                        class="rounded-circle"
+                                                        style="width: 38px;height: 38px;object-fit: cover;" />
+                                                </div>
+                                                <div>
+                                                    <p class="m-0 fw-bold">{{request.user}}</p>
+
+                                                </div>
+                                            </div>
+                                            <form action="" method="post" enctype="multipart/form-data">
+                                                {% csrf_token %}
+
+                                                <div>
+
+                                                    <input type="text" name="title" placeholder="Title(optional)"
+                                                        class="form-control my-3 border-0 " maxlength="120" id="id_title">
+                                                    <textarea name="description" placeholder="Description"
+                                                        class="form-control border-0 text-muted" cols="40" rows="10" required=""
+                                                        id="id_description"></textarea>
+                                                </div>
+
+                                                <!-- Photo -->
+                                                <div
+                                                    class="d-flex justify-content-between border border-1 border-light rounded p-1">
+                                                    <div>
+                                                        <input type="file" name="image" accept="image/*" id="id_image"
+                                                            style="opacity: 0; width: 0.1px; height: 0.1px; position: absolute;">
+                                                        <label for="id_image" class="fs-3">
+                                                            <div class="btn btn-outline-primary rounded-pill"> Upload photo
+                                                                <i class="fas fa-images text-dark pointer mx-1 "
+                                                                    role="button">
+                                                                </i>
+                                                            </div>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                    </div>
+                                    <!-- end -->
+                                </div>
+                                <!-- footer -->
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary w-30 rounded-pill">
+                                        Post
+                                    </button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+             <!-- ======= suggestions =============-->
+                <div class="section">
+                    {% if request.user.user_profile %}
+                <h5 class="text-primary mt-3 mb-0">Peoples you may know</h5>
+                    {% endif %}
+
+                <div class="row row-cols-1 row-cols-md-3  g-4 mt-1" >
+                {% if request.user.user_profile %}
+                {% if request.user.user_profile.get_suggestions %}
+                {% for user in request.user.user_profile.get_suggestions|slice:"3" %}
+
+                    <div class=" col">
+                        <div class="card h-100 ">
+                            <div class="card-body pt-0">
+                                <div class="text-center">
+                                    <!-- Avatar -->
+                                    <div class="avatar  mt-1 mb-3">
+                                        <a href="{% url 'other-profile' user.id %}">
+                                            <img class=" rounded-circle me-2" src="{{user.profile_pic.url}}" alt="avatar"
+                                        style="width: 150px; height: 150px; object-fit: cover; position: relative;" />
+                                            <!-- Info -->
+                                    <div class="follow_container ms-0">
+                                        <p class="mb-2 text-muted">{{user}}</p>
+                                        {% csrf_token %}
+                                        <input class="follow_user_id" type="hidden" name="" value="{{user.id}}">
+                                        <button class="btn btn-primary follow_btn followed{{user.id}}">Follow</button>
+                                    </div>
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <p class="text-muted">No Suggestions</p>
+                    {% endif %}
+
+                    {% endif %}
+                </div>
+
+                </div>
+
+
+                <!--======== posts ========-->
+
+                {% if blogs %}
+                {% for blog in blogs %}
+                <div class="bg-white p-4 rounded shadow mt-3">
+                    <!-- author -->
+                    <div class="d-flex justify-content-between">
+                        <!-- avatar -->
+                        <a href="{% url 'other-profile' blog.user.id %}">
+                            <div class="d-flex">
+                                <img src="{{blog.user.profile_pic.url}}" alt="avatar" class="rounded-circle mt-1 me-2"
+                                    style="width: 38px; height: 38px; object-fit: cover" />
+                                <div>
+                                    <p class="m-0 text-muted fw-bold p-0">{{blog.user}}</p>
+                                    <span class="text-muted fs-6">{{blog.updated_at | timesince}} ago</span>
+                                </div>
+                            </div>
+                        </a>
+
+                        {% if blog.user == request.user %}
+                        <!-- edit -->
+                        <i class="fas fa-ellipsis-h" type="button" id="post1Menu" data-bs-toggle="dropdown"
+                            aria-expanded="false"></i>
+                        <!-- edit menu -->
+                        <ul class="dropdown-menu border-0 shadow" aria-labelledby="post1Menu">
+                            <li class="d-flex align-items-center">
+
+                                <a class="dropdown-item d-flex justify-content-around align-items-center fs-7 text-primary ms-3 "
+                                    href="{% url 'blog-edit' blog.id %}"><span>Edit</span>
+                                    <img  src="{% static 'assets/file-edit-icon.svg' %}" alt="" style="height:18px;width:18px;" >
+                                    </a>
+
+                            </li>
+                            <li class="d-flex align-items-center">
+                                <a class="dropdown-item d-flex justify-content-around align-items-center fs-7 text-primary"
+                                    href="{% url 'blog-delete' blog.id %}"><span>Delete</span>
+                                    <img src="{% static 'assets/delete-icon.svg' %}" alt="" style="height:18px;width:18px;padding-left:3px;">
+                                     </a>
+                            </li>
+                        </ul>
+                        {% endif %}
+
+                    </div>
+                    <!--===== post content =======-->
+                    <div class="mt-3">
+                        <div>
+                            {% if blog.title %}
+                            <h5>{{blog.title}}</h5>
+                            {% endif %}
+                            <p>
+                                {{blog.description}}
+                            </p>
+                            {% if blog.image %}
+                            <img src="{{blog.image.url}}" alt="post image" class="img-fluid rounded" />
+                            {% endif %}
+                        </div>
+                        <!--==== likes & comments =====-->
+                        <div class="post__comment mt-3 position-relative">
+                            <!--====== likes ======-->
+                            <div class="d-flex align-items-center top-0 start-0 position-absolute"
+                                style="height: 50px; z-index: 5">
+
+                                <div class="me-2 " >
+                                    <i class="fa-solid fa-thumbs-up text-primary"></i>
+                                </div>
+                                <p class="m-0  text-dark fs-7 like_count{{blog.id}}">{{ blog.get_likes_count}}</p>
+
+
+                            </div>
+                            <!--==== comments start =====-->
+                            <div class="accordion " id="accordionExample">
+                                <div class="accordion-item border-0">
+                                    <!-- comment collapse -->
+                                    <h2 class="accordion-header ms-5" id="headingTwo">
+                                        <div class="view_comment accordion-button collapsed pointer d-flex justify-content-end"
+                                            data-bs-toggle="collapse" data-bs-target="#collapsePost{{blog.id}}"
+                                            aria-expanded="false" aria-controls="collapsePost{{blog.id}}" role="button">
+
+                                            <p class="mb-1 comment_count{{blog.id}}">{{blog.blog_comment.all.count}}
+                                               Comments</p>
+                                        </div>
+                                    </h2>
+                                    <hr />
+                                    <!--===== comment & like bar =======-->
+                                    <div class="d-flex justify-content-around ">
+                                        <div class="like_container{{blog.id}} like_container">
+                                            <div class="like_btn d-flex justify-content-center align-items-center like_btn"
+                                                role="button">
+
+                                                {% if request.user in blog.liked_by.all %}
+                                                <i class="fa-solid fa-thumbs-up text-primary fs-2"></i>
+                                                <input type="hidden" name="" class="is_liked" value="True">
+                                                {% else %}
+                                                <i class="fa-solid fa-thumbs-up text-primary fs-2"></i>
+                                                <input type="hidden" name="" class="is_liked" value="False">
+                                                {% endif %}
+
+                                                <input type="hidden" name="" class="blog_id" value="{{blog.id}}">
+                                            </div>
+                                        </div>
+                                        <div class="ms-5 view_comment dropdown-item rounded d-flex justify-content-end align-items-center pointer text-muted w-50"
+                                            data-bs-toggle="collapse" data-bs-target="#collapsePost{{blog.id}}"
+                                            aria-expanded="false" aria-controls="collapsePost{{blog.id}}" role="button">
+                                            <i class="fas fa-comment fs-3 me-2 text-primary "></i>
+                                        </div>
+                                    </div>
+                                    <!-- comment expand -->
+                                    <div id="collapsePost{{blog.id}}" class="accordion-collapse collapse "
+                                        aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                        <hr />
+                                        <div class="accordion-body ">
+                                            <!-- create comment -->
+                                            <form id="commentForm{{blog.id}}">
+                                                <div class="d-flex my-1 comment">
+                                                    <!-- avatar -->
+                                                    <div>
+                                                        <img src="{{request.user.profile_pic.url}}" alt="avatar"
+                                                            class="rounded-circle me-2"
+                                                            style="width: 38px; height: 38px; object-fit: cover;" />
+                                                    </div>
+                                                    {% csrf_token %}
+                                                    <!--=========== comment input ======-->
+                                                    <input type="hidden" name="blog_id" class="blog_id"
+                                                        value="{{blog.id}}">
+                                                    <input type="text"
+                                                        class="comment_input form-control border-0 rounded-pill bg-gray"
+                                                        placeholder="Write a comment" />
+                                                    <span class="btn btn-primary ms-2 add_comment rounded-pill"
+                                                        role="button">Add</span>
+                                                    <span class="btn btn-primary ms-2 edit_comment_btn d-none rounded-pill"
+                                                        role="button">Edit</span>
+                                                </div>
+                                            </form>
+                                            <!-- end -->
+
+                                            <!--==== comments ======-->
+                                            <div class="comment_body{{blog.id}}">
+
+                                                {% for comment in blog.blog_comment.all%}
+                                                <div class="d-flex align-items-center my-lg-1 px-lg-3">
+                                                    <!-- avatar -->
+                                                    <img src="{{comment.user.profile_pic.url}}" alt="avatar"
+                                                        class="rounded-circle me-2"
+                                                        style=" width: 38px; height: 38px; object-fit: cover;" />
+                                                    <!-- comment text -->
+                                                    <div class="p-lg-3 rounded comment__input w-100">
+                                                        {% if comment.user == request.user%}
+                                                        <!-- comment menu of author -->
+                                                        <div class="d-flex justify-content-end">
+                                                            <!-- icon -->
+                                                            <i class="fas fa-ellipsis-h text-blue pointer"
+                                                                id="post1CommentMenuButton" data-bs-toggle="dropdown"
+                                                                aria-expanded="false" role="button"></i>
+                                                            <!-- menu -->
+                                                            <ul class="dropdown-menu border-0 shadow edit_comment_container"
+                                                                aria-labelledby="post1CommentMenuButton">
+                                                                <li class="d-flex align-items-center">
+                                                                    <a class="edit_comment dropdown-item d-flex justify-content-around align-items-center fs-7 text-primary ms-3"
+                                                                        href="#"> <span>Edit</span>
+                                                                        <img src="{% static 'assets/file-edit-icon.svg' %}" alt="" style="width:18px;height:18px;">
+                                                                       </a>
+                                                                </li>
+                                                                <li class="d-flex align-items-center">
+                                                                    <a class="delete_comment dropdown-item d-flex justify-content-around align-items-center fs-7 text-primary"
+                                                                        href="#"><span>Delete</span>
+                                                                        <img src="{% static 'assets/delete-icon.svg' %}" alt="" style="width:18px;height:18px;">
+                                                                        </a>
+                                                                </li>
+                                                                <input type="hidden" name="" class="blog_id"
+                                                                    value="{{blog.id}}">
+                                                                <input class="comment_id" type="hidden" name=""
+                                                                    value="{{comment.id}}">
+                                                            </ul>
+                                                        </div>
+                                                        {% endif %}
+                                                        <p class=" m-0 text-muted">{{comment.user}} |
+                                                            <span class="">{{comment.updated_at|timesince}}
+                                                                ago</span>
+                                                        </p>
+                                                        <p class="m-0 fs-7 bg-gray py-2 rounded">
+                                                            {{comment.comment}}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% endfor%}
+                {% else %}
+                <h1 class="text-muted text-center mt-5">No Blog</h1>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <!-- ================= Right bar ================= -->
+        <div class="col-12 col-lg-3 scrollbar h-100" style="position: fixed; top: 5%; right: 0; z-index: 4;">
+            {% include 'includes/rightbar.html' %}
+        </div>
+    </div>
+</div>
+{% endblock %}

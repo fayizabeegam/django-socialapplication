@@ -1,0 +1,67 @@
+<div class="d-none d-lg-block">
+    <!--======= dp =========-->
+    <div class="offcanvas-body d-block px-1 px-lg-0 mt-5 bg-mode rounded border shadow">
+     <div class="card overflow-hidden ">
+         <!-- Card body START -->
+         <div class="card-body pt-0">
+             <div class="text-center">
+                 <!-- Avatar -->
+                 <div class="avatar  mt-5 mb-3">
+                     <a href="{% url 'my-profile'%}"><img class=" rounded-circle me-2" src="{{request.user.profile_pic.url}}" alt="avatar"
+                                        style="width: 150px; height: 150px; object-fit: cover; position: relative;" /></a>
+                 </div>
+
+                <!-- Info -->
+                 <h5 class="mb-0 text-dark"> <a href="#!">{{request.user}}</a> </h5>
+
+                 <p class="mt-3">{{request.user.user_profile.bio}}</p>
+                 <!-- User stat START -->
+                 <div class="hstack gap-2 gap-xl-3 justify-content-center">
+                     <!-- User stat item -->
+                     <div>
+                        <h6 class="mb-0">{{request.user.user_blog.all.count}}</h6>
+                        <small>Post</small>
+                      </div>
+                      <!-- Divider -->
+                      <div class="vr"></div>
+                      <!-- User stat item -->
+                      <div>
+                        {% if request.user.user_profile.get_followers_count %}
+                        <h6 class="mb-0">{{request.user.user_profile.get_followers_count}}</h6>
+                        {% else %}
+                        <h6 class="mb-0">0</h6>
+                        {% endif %}
+                        <small>Followers</small>
+                      </div>
+
+                      <!-- Divider -->
+                      <div class="vr"></div>
+                      <!-- User stat item -->
+                      <div>
+                        {% if request.user.user_profile.get_following_count %}
+                        <h6 class="mb-0">{{request.user.user_profile.get_following_count}}</h6>
+                        {% else %}
+                        <h6 class="mb-0">0</h6>
+                        {% endif %}
+                        <small>Following</small>
+                      </div>
+                 </div>
+                    <!-- User stat END -->
+                 <!-- Card footer -->
+                {% if request.user.user_profile %}
+                <div class="card-footer text-center py-2 ">
+                  <a class="btn btn-link btn-sm text-decoration-none bg-mode" href="{%url 'my-profile'%}" >View Profile</a>
+                </div>
+
+                 {% else %}
+                 <a class="btn btn-link btn-sm text-decoration-none bg-mode" href="{% url 'profile-add' %}" >Add Profile To explore platform</a>
+                 {% endif %}
+             </div>
+         </div>
+     </div>
+    </div>
+
+
+
+
+</div>

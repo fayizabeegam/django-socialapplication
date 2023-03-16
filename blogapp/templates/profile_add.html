@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container ">
+    <form class="mx-auto w-100 add_profile text-primary " style="margin-top: 7%; max-width: 500px;" action="" method="post">
+        <h4 class="text-center text-primary">Profile</h4>
+
+        {% csrf_token %}
+        {{form}}
+        <button class="btn btn-primary mt-3 w-100" type="submit">Save Profile</button>
+    </form>
+</div>
+{% endblock %}
